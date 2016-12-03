@@ -8982,7 +8982,7 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/swift-collection-types/issues/2"
   },
   {
-    "body": "We shouldn't be teaching this and should focus on interpolation and making https://github.com/learn-co-curriculum/interpolation-readme better and more complete.",
+    "body": "We shouldn't be teaching this and should focus on interpolation and making https://github.com/learn-co-cuirriculum/interpolation-readme better and more complete.",
     "created_at": "2015-06-08 20:12:25 UTC",
     "comments_count": 1,
     "id": 86313315,
@@ -9000,3 +9000,45 @@ const issues = [
     "url": "https://api.github.com/repos/learn-co-curriculum/js-donut-lab/issues/2"
   }
 ];
+
+const issuesWithUpdatedApiUrl = issues.map(function(issue) {
+  return Object.assign({}, issue, {
+      url: issue.url.slice(0, 11) + "-v2" + issue.url.slice(11)
+    });
+});
+
+const commentCountAcrossIssues = issues
+  .map(function(issue) { return issue.comments_count; })
+  .reduce(function(accumulator, current) {
+    return accumulator + current;
+  }, 0);
+
+  // Alternative solution
+
+  // function issueCommentCounter(accumulator, issue) {
+  //   return accumulator + issue.comments_count;
+  // }
+  // const commentCountAcrossIssues = issues.reduce(issueCommentCounter, 0);
+
+const openIssues = issues.reduce(function(result, issue) {
+  if (issue.state === "open") {
+    result.push(issue);
+  }
+  return result;
+}, []);
+
+const nonAutomaticIssues = issues.reduce((result, issue) => {
+  if (!issue.body.includes('automatically created')) {
+    return [...result, issue];
+  }
+  return result;
+}, []);
+
+let rows = nonAutomaticIssues.map(function(issue) { 
+  return '<tr>'+
+          '<td>' + issue.body + '</td>'+
+          '<td>' + issue.created_at + '</td>'+
+          '<td>' + issue.state + '</td>'+
+         '</tr>';
+}).join('');
+$('#results').append(rows);
